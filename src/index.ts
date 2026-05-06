@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import path from "path";
-import puppeteer, { type Page } from "puppeteer";
+import puppeteer, { type Page } from "puppeteer-core";
 import XLSX from "xlsx";
 import StyledXLSX from "xlsx-js-style";
 
@@ -12,6 +12,12 @@ const SEARCH_INPUT_SELECTOR =
 const RESULTS_LIST_XPATH =
   "/html/body/div[1]/div[2]/div[10]/aside/div[1]/div[1]/div/div[1]/div/div/div[5]/div/div[5]/div/div/div/div[3]";
 const REPORT_FILE_NAME = "result.xlsx";
+const BROWSER_EXECUTABLE_PATHS = [
+  "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+  "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
+  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+];
 
 interface CliOptions {
   file: string;
@@ -37,8 +43,8 @@ function printHelp(): void {
   console.log(
     `
 Usage:
-  organization-scaner --file <file.xlsx> --out-dir <directory> --column <number> --row <number> [--additional <number>]
-  organization-scaner <file.xlsx> <directory> <column-number> <row-number> [additional-column-number]
+  ya-finder --file <file.xlsx> --out-dir <directory> --column <number> --row <number> [--additional <number>]
+  ya-finder <file.xlsx> <directory> <column-number> <row-number> [additional-column-number]
 
 Options:
   -f, --file        Excel file to read
@@ -400,9 +406,23 @@ async function readResultNames(page: Page): Promise<string[]> {
   }, RESULTS_LIST_XPATH);
 }
 
+function getBrowserExecutablePath(): string | undefined {
+  const envPath = process.env.PUPPETEER_EXECUTABLE_PATH;
+
+  if (envPath && fs.existsSync(envPath)) {
+    return envPath;
+  }
+
+  return BROWSER_EXECUTABLE_PATHS.find((browserPath) =>
+    fs.existsSync(browserPath),
+  );
+}
+
 async function parse(value: string): Promise<string[]> {
+  const executablePath = getBrowserExecutablePath();
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath,
     defaultViewport: {
       width: 1366,
       height: 768,

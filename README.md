@@ -22,6 +22,12 @@ npm run dev -- "D:\VS Code\cadastr\1.xlsx" xlsx 4 2 5
 node dist/index.js "D:\VS Code\cadastr\1.xlsx" xlsx 4 2 5
 ```
 
+Готовый exe-файл запускается так:
+
+```bash
+ya-finder.exe "D:\VS Code\cadastr\1.xlsx" xlsx 4 2 5
+```
+
 Формат аргументов: `<путь-к-файлу.xlsx> <выходная-директория> <номер-колонки> <номер-строки> <дополнительная-колонка>`.
 
 `--column` использует нумерацию с 1: `1` означает колонку A, `2` означает колонку B.
