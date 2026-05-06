@@ -9,16 +9,29 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:exe": "npm run build && powershell -ExecutionPolicy Bypass -File scripts/build-release.ps1",
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts"
   },
+  "pkg": {
+    "scripts": [
+      "dist/index.js"
+    ],
+    "assets": [
+      "node_modules/xlsx/**/*",
+      "node_modules/xlsx-js-style/**/*"
+    ]
+  },
   "dependencies": {
     "puppeteer": "^24.42.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
+    "@yao-pkg/pkg": "^6.19.0",
+    "postject": "^1.0.0-alpha.6",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   }

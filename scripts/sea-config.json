@@ -1,0 +1,5 @@
+{
+  "main": "scripts/sea-bootstrap.cjs",
+  "output": "release/sea-prep.blob",
+  "disableExperimentalSEAWarning": true
+}
